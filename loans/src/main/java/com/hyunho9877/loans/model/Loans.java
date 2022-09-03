@@ -1,4 +1,4 @@
-package com.hyunho9877.model;
+package com.hyunho9877.loans.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,19 +8,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
-@Getter
-@Setter
-@ToString
-public class Customer {
+@Getter @Setter @ToString
+public class Loans {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int loanNumber;
     private int customerId;
-    private String name;
-    private String email;
-    private String mobileNumber;
-    private LocalDate createDt;
+    private Date startDt;
+    private String loanType;
+    private int totalLoan;
+    private int amountPaid;
+    private int outstandingAmount;
+    private String createDt;
 }
