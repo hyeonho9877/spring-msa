@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  accounts:
+    image: ruldarm00/accounts:latest
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    ports:
+      - "8080:8080"
+    networks:
+      - test-network
+
+  loans:
+    image: ruldarm00/loans:latest
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    ports:
+      - "8090:8090"
+    networks:
+      - test-network
+
+  cards:
+    image: ruldarm00/cards:latest
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    ports:
+      - "9000:9000"
+    networks:
+      - test-network
+
+
+networks:
+  test-network:
