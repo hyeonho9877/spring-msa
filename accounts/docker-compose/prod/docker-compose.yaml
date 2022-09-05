@@ -12,6 +12,8 @@ services:
       - "8071:8071"
     networks:
       - ruldarm00
+    environment:
+      ENCRYPT_KEY: ddldddtkqslkxhddogkcrgnriklkurfqlstdsndqdkqnlrsdelrmfsdgdgkrdlwlsfhlnkdssjstmfqrrnalqfmsfwniksrPoruodgfrvdjtlkkhsldlnhghkavkceeiorkr
 
   accounts:
     image: ruldarm00/accounts:latest
