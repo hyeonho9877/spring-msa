@@ -1,0 +1,80 @@
+version: "3.8"
+
+services:
+
+  configserver:
+    image: ruldarm00/config:latest
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    ports:
+      - "8071:8071"
+    networks:
+      - ruldarm00
+
+  accounts:
+    image: ruldarm00/accounts:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - ruldarm00
+    depends_on:
+      - configserver
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
+  loans:
+    image: ruldarm00/loans:latest
+    ports:
+      - "8090:8090"
+    networks:
+      - ruldarm00
+    depends_on:
+      - configserver
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
+  cards:
+    image: ruldarm00/cards:latest
+    ports:
+      - "9000:9000"
+    networks:
+      - ruldarm00
+    depends_on:
+      - configserver
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
+networks:
+  ruldarm00:
