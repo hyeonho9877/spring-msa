@@ -38,7 +38,7 @@ public class AccountsController {
         return ResponseEntity.ok(new Properties(accountsConfig.getMsg(), accountsConfig.getBuildVersion(), accountsConfig.getMailDetails(), accountsConfig.getActiveBranches()));
     }
 
-    @CircuitBreaker(name = "detailsForCustomerSupportApp")
+    @CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "myCustomerDetailsFallBack")
     @PostMapping("/myCustomerDetails")
     public CustomerDetails myCustomerDetails(@RequestBody Customer customer) {
         Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow();
@@ -46,5 +46,12 @@ public class AccountsController {
         List<Cards> cards = cardsClient.getCardDetail(customer);
 
         return new CustomerDetails(accounts, loans, cards);
+    }
+
+    private CustomerDetails myCustomerDetailsFallBack(Customer customer, Throwable t) {
+        Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow();
+        List<Loans> loans = loansClient.getLoansDetail(customer);
+
+        return new CustomerDetails(accounts, loans, null);
     }
 }
