@@ -23,6 +23,7 @@ public class LoansController {
 
     @PostMapping("/myLoans")
     public List<Loans> getLoansDetail(@RequestBody Customer customer) {
+        System.out.println("LoansController.getLoansDetail");
         return loansRepository.findByCustomerIdOrderByStartDtDesc(customer.getCustomerId());
     }
 
