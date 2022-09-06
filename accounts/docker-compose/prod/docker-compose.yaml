@@ -15,6 +15,27 @@ services:
     environment:
       ENCRYPT_KEY: ddldddtkqslkxhddogkcrgnriklkurfqlstdsndqdkqnlrsdelrmfsdgdgkrdlwlsfhlnkdssjstmfqrrnalqfmsfwniksrPoruodgfrvdjtlkkhsldlnhghkavkceeiorkr
 
+  eurekaserver:
+    image: ruldarm00/eurekaserver:latest
+    ports:
+      - "8070:8070"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - ruldarm00
+    depends_on:
+      - configserver
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
   accounts:
     image: ruldarm00/accounts:latest
     ports:
@@ -23,6 +44,7 @@ services:
       - ruldarm00
     depends_on:
       - configserver
+      - eurekaserver
     deploy:
       resources:
         limits:
@@ -35,6 +57,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
 
   loans:
     image: ruldarm00/loans:latest
@@ -44,6 +67,7 @@ services:
       - ruldarm00
     depends_on:
       - configserver
+      - eurekaserver
     deploy:
       resources:
         limits:
@@ -56,6 +80,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
 
   cards:
     image: ruldarm00/cards:latest
@@ -65,6 +90,7 @@ services:
       - ruldarm00
     depends_on:
       - configserver
+      - eurekaserver
     deploy:
       resources:
         limits:
@@ -77,6 +103,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
 
 networks:
   ruldarm00:
