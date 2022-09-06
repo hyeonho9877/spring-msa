@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.hyunho9877.accounts.client.CardsFeignClient;
 import com.hyunho9877.accounts.client.LoansFeignClient;
+import com.hyunho9877.accounts.config.AccountsServiceConfig;
 import com.hyunho9877.accounts.model.*;
 import com.hyunho9877.accounts.repository.AccountsRepository;
-import com.hyunho9877.accounts.config.AccountsServiceConfig;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,7 @@ public class AccountsController {
         return ResponseEntity.ok(new Properties(accountsConfig.getMsg(), accountsConfig.getBuildVersion(), accountsConfig.getMailDetails(), accountsConfig.getActiveBranches()));
     }
 
+    @CircuitBreaker(name = "detailsForCustomerSupportApp")
     @PostMapping("/myCustomerDetails")
     public CustomerDetails myCustomerDetails(@RequestBody Customer customer) {
         Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow();
@@ -45,8 +47,4 @@ public class AccountsController {
 
         return new CustomerDetails(accounts, loans, cards);
     }
-
-
-
-
 }
