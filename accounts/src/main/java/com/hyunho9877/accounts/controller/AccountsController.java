@@ -3,9 +3,9 @@ package com.hyunho9877.accounts.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.hyunho9877.accounts.model.Accounts;
-import com.hyunho9877.accounts.model.Customer;
-import com.hyunho9877.accounts.model.Properties;
+import com.hyunho9877.accounts.client.CardsFeignClient;
+import com.hyunho9877.accounts.client.LoansFeignClient;
+import com.hyunho9877.accounts.model.*;
 import com.hyunho9877.accounts.repository.AccountsRepository;
 import com.hyunho9877.accounts.config.AccountsServiceConfig;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class AccountsController {
 
     private final AccountsRepository accountsRepository;
     private final AccountsServiceConfig accountsConfig;
+    private final CardsFeignClient cardsClient;
+    private final LoansFeignClient loansClient;
 
     @PostMapping("/myAccount")
     public Accounts getAccountDetails(@RequestBody Customer customer) {
@@ -32,5 +36,17 @@ public class AccountsController {
         ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
         return ResponseEntity.ok(new Properties(accountsConfig.getMsg(), accountsConfig.getBuildVersion(), accountsConfig.getMailDetails(), accountsConfig.getActiveBranches()));
     }
+
+    @PostMapping("/myCustomerDetails")
+    public CustomerDetails myCustomerDetails(@RequestBody Customer customer) {
+        Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow();
+        List<Loans> loans = loansClient.getLoansDetail(customer);
+        List<Cards> cards = cardsClient.getCardDetail(customer);
+
+        return new CustomerDetails(accounts, loans, cards);
+    }
+
+
+
 
 }
