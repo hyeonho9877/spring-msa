@@ -105,5 +105,31 @@ services:
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
 
+  gateway:
+    image: ruldarm00/gateway:latest
+    ports:
+      - "8072:8072"
+    networks:
+      - ruldarm00
+    depends_on:
+      - configserver
+      - eurekaserver
+      - accounts
+      - loans
+      - cards
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+      restart_policy:
+        condition: on-failure
+        delay: 45s
+        max_attempts: 3
+        window: 180s
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+
 networks:
   ruldarm00:
