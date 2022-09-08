@@ -8,13 +8,11 @@ import com.hyunho9877.accounts.client.LoansFeignClient;
 import com.hyunho9877.accounts.config.AccountsServiceConfig;
 import com.hyunho9877.accounts.model.*;
 import com.hyunho9877.accounts.repository.AccountsRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,20 +36,21 @@ public class AccountsController {
         return ResponseEntity.ok(new Properties(accountsConfig.getMsg(), accountsConfig.getBuildVersion(), accountsConfig.getMailDetails(), accountsConfig.getActiveBranches()));
     }
 
-//    @CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "myCustomerDetailsFallBack")
+
 //    @Retry(name = "retryForCustomerDetails", fallbackMethod = "myCustomerDetailsFallBack")
     @PostMapping("/myCustomerDetails")
-    public CustomerDetails myCustomerDetails(@RequestBody Customer customer) {
+    @CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "myCustomerDetailsFallBack")
+    public CustomerDetails myCustomerDetails(@RequestHeader(name = "eazybank-correlation-id") String correlationId, @RequestBody Customer customer) {
         Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow();
-        List<Loans> loans = loansClient.getLoansDetail(customer);
-        List<Cards> cards = cardsClient.getCardDetail(customer);
+        List<Loans> loans = loansClient.getLoansDetail(correlationId, customer);
+        List<Cards> cards = cardsClient.getCardDetail(correlationId, customer);
 
         return new CustomerDetails(accounts, loans, cards);
     }
 
-    private CustomerDetails myCustomerDetailsFallBack(Customer customer, Throwable t) {
+    private CustomerDetails myCustomerDetailsFallBack(@RequestHeader(name = "eazybank-correlation-id") String correlationId, Customer customer, Throwable t) {
         Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow();
-        List<Loans> loans = loansClient.getLoansDetail(customer);
+        List<Loans> loans = loansClient.getLoansDetail(correlationId, customer);
 
         return new CustomerDetails(accounts, loans, null);
     }

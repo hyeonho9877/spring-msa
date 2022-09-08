@@ -7,10 +7,7 @@ import com.hyunho9877.loans.model.Properties;
 import com.hyunho9877.loans.repository.LoansRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,7 +19,7 @@ public class LoansController {
     private final LoansServiceConfig loansConfig;
 
     @PostMapping("/myLoans")
-    public List<Loans> getLoansDetail(@RequestBody Customer customer) {
+    public List<Loans> getLoansDetail(@RequestHeader("eazybank-correlation-id") String correlationId, @RequestBody Customer customer) {
         System.out.println("LoansController.getLoansDetail");
         return loansRepository.findByCustomerIdOrderByStartDtDesc(customer.getCustomerId());
     }
