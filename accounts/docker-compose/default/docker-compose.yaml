@@ -2,6 +2,17 @@ version: "3.8"
 
 services:
 
+  zipkin:
+    image: openzipkin/zipkin
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    ports:
+      - "9411:9411"
+    networks:
+      - ruldarm00
+
   configserver:
     image: ruldarm00/config:latest
     deploy:
@@ -10,13 +21,16 @@ services:
           memory: 700m
     ports:
       - "8071:8071"
+    depends_on:
+      - zipkin
     networks:
       - ruldarm00
     environment:
       ENCRYPT_KEY: ddldddtkqslkxhddogkcrgnriklkurfqlstdsndqdkqnlrsdelrmfsdgdgkrdlwlsfhlnkdssjstmfqrrnalqfmsfwniksrPoruodgfrvdjtlkkhsldlnhghkavkceeiorkr
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
 
   eurekaserver:
-    image: ruldarm00/eurekaserver:latest
+    image: ruldarm00/eureka:latest
     ports:
       - "8070:8070"
     deploy:
@@ -35,6 +49,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
 
   accounts:
     image: ruldarm00/accounts:latest
@@ -58,6 +73,7 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
 
   loans:
     image: ruldarm00/loans:latest
@@ -81,6 +97,7 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
 
   cards:
     image: ruldarm00/cards:latest
@@ -104,6 +121,7 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
 
   gateway:
     image: ruldarm00/gateway:latest
@@ -130,6 +148,7 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
 
 networks:
   ruldarm00:
