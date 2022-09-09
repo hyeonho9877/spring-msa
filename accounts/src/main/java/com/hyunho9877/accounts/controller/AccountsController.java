@@ -10,6 +10,7 @@ import com.hyunho9877.accounts.model.*;
 import com.hyunho9877.accounts.repository.AccountsRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public class AccountsController {
     private final LoansFeignClient loansClient;
 
     @PostMapping("/myAccount")
+    @Timed(value = "getAccountDetails.time", description = "Time taken to return Account Details")
     public Accounts getAccountDetails(@RequestBody Customer customer) {
         return accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow();
     }
