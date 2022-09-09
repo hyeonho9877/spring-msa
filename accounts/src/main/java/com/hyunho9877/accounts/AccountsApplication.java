@@ -18,7 +18,7 @@ public class AccountsApplication {
     }
 
     @Bean
-    public TimedAspect timedAspect(MeterRegistry registry) {
+    TimedAspect timedAspect(MeterRegistry registry) {
         return new TimedAspect(registry);
     }
 }

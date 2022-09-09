@@ -45,7 +45,6 @@ public class AccountsController {
 //    @Retry(name = "retryForCustomerDetails", fallbackMethod = "myCustomerDetailsFallBack")
     @PostMapping("/myCustomerDetails")
     @CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "myCustomerDetailsFallBack")
-    @Timed(value = "myCustomerDetails.time", description = "Time taken to return Customer Details")
     public CustomerDetails myCustomerDetails(@RequestHeader(name = "eazybank-correlation-id") String correlationId, @RequestBody Customer customer) {
         logger.info("AccountsController.myCustomerDetails started");
         Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow();
