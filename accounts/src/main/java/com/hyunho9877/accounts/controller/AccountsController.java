@@ -64,7 +64,7 @@ public class AccountsController {
     @GetMapping("/sayHello")
     @RateLimiter(name = "sayHello", fallbackMethod = "sayHelloFallback")
     public String sayHello() {
-        return "Hello, Welcome to Eazy Bank";
+        return "Hello, Welcome to Eazy Bank Kubernetes Cluster";
     }
 
 

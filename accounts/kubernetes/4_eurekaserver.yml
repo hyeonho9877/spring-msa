@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: eurekaserver
-        image: ruldarm00/eurekaserver:latest
+        image: ruldarm00/eureka:latest
         ports:
         - containerPort: 8070
         env:
