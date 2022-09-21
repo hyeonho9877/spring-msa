@@ -6,6 +6,7 @@ metadata:
   labels:
     app: {{ .Values.deploymentLabel }}
 spec:
+  replicas: {{ .Values.replicaCount}}
   selector:
     matchLabels:
       app: {{ .Values.deploymentLabel }}
@@ -21,32 +22,32 @@ spec:
             - containerPort: {{ .Values.containerPort }}
               protocol: TCP
           env:
-            {{ if .Values.profile_enabled }}
+                  {{- if .Values.profile_enabled }}
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
                 configMapKeyRef:
-                  key: SPRING_PROFILES_ACTIVE
                   name: {{ .Values.global.configMapName }}
-            {{- end -}}
-            {{- if .Values.zipkin_enabled }}
+                  key: SPRING_PROFILES_ACTIVE
+                  {{- end }}
+                  {{- if .Values.zipkin_enabled }}
             - name: SPRING_ZIPKIN_BASEURL
               valueFrom:
                 configMapKeyRef:
-                  key: SPRING_ZIPKIN_BASEURL
                   name: {{ .Values.global.configMapName }}
-            {{- end -}}
-            {{- if .Values.config.enabled }}
+                  key: SPRING_ZIPKIN_BASEURL
+                  {{- end }}
+                  {{- if .Values.config_enabled }}
             - name: SPRING_CONFIG_IMPORT
               valueFrom:
                 configMapKeyRef:
-                  key: SPRING_CONFIG_IMPORT
                   name: {{ .Values.global.configMapName }}
-            {{- end -}}
-            {{- if .Values.eureka_enabled -}}
+                  key: SPRING_CONFIG_IMPORT
+                  {{- end }}
+                  {{- if .Values.eureka_enabled }}
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               valueFrom:
                 configMapKeyRef:
-                  key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
                   name: {{ .Values.global.configMapName }}
-            {{- end -}}
+                  key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+                  {{- end }}
   {{- end -}}

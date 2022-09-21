@@ -1,0 +1,20 @@
+deploymentName: accounts-deployment
+deploymentLabel: accounts
+
+replicaCount: 2
+
+image:
+  repository: ruldarm00/accounts
+  tag: latest
+
+containerPort: 8080
+
+service:
+  type: LoadBalancer
+  port: 8080
+  targetPort: 8080
+
+config_enabled: true
+zipkin_enabled: true
+profile_enabled: true
+eureka_enabled: true
