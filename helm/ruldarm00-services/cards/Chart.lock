@@ -1,0 +1,6 @@
+dependencies:
+- name: ruldarm00-common
+  repository: file://../../ruldarm00-common
+  version: 0.1.0
+digest: sha256:7451d902b88112ec842014a7528bb170d0fc9fad2b76615650360b7fd60e1281
+generated: "2022-09-19T16:26:11.4923844+09:00"
