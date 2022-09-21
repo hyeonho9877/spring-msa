@@ -1,0 +1,27 @@
+dependencies:
+- name: ruldarm00-common
+  repository: file://../../ruldarm00-common
+  version: 0.1.0
+- name: zipkin
+  repository: file://../../ruldarm00-services/zipkin
+  version: 0.1.0
+- name: configserver
+  repository: file://../../ruldarm00-services/configserver
+  version: 0.1.0
+- name: eurekaserver
+  repository: file://../../ruldarm00-services/eurekaserver
+  version: 0.1.0
+- name: accounts
+  repository: file://../../ruldarm00-services/accounts
+  version: 0.1.0
+- name: loans
+  repository: file://../../ruldarm00-services/loans
+  version: 0.1.0
+- name: cards
+  repository: file://../../ruldarm00-services/cards
+  version: 0.1.0
+- name: gateway
+  repository: file://../../ruldarm00-services/gateway
+  version: 0.1.0
+digest: sha256:5d0e0bec1fdd9b0b551f5a68d6028a6c9a56ef983d85a22d660b151346835d59
+generated: "2022-09-21T22:00:05.0092213+09:00"
