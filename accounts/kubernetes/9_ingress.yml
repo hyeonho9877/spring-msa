@@ -1,0 +1,80 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/backends: '{"k8s-be-31370--3d0e5990dcaa3aa1":"HEALTHY","k8s1-3d0e5990-default-sample-deploy-hyunho9877-commo-8-6a3f0ee3":"HEALTHY"}'
+    ingress.kubernetes.io/forwarding-rule: k8s2-fr-62odyanv-default-sample-deploy-hyunho9877-comm-oxm0507f
+    ingress.kubernetes.io/target-proxy: k8s2-tp-62odyanv-default-sample-deploy-hyunho9877-comm-oxm0507f
+    ingress.kubernetes.io/url-map: k8s2-um-62odyanv-default-sample-deploy-hyunho9877-comm-oxm0507f
+    meta.helm.sh/release-name: sample-deploy
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2022-09-17T10:57:14Z"
+  finalizers:
+    - networking.gke.io/ingress-finalizer-V2
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: sample-deploy
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: hyunho9877-common
+    app.kubernetes.io/version: 1.16.0
+    helm.sh/chart: hyunho9877-common-0.1.0
+  managedFields:
+    - apiVersion: networking.k8s.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:meta.helm.sh/release-name: {}
+            f:meta.helm.sh/release-namespace: {}
+          f:labels:
+            .: {}
+            f:app.kubernetes.io/instance: {}
+            f:app.kubernetes.io/managed-by: {}
+            f:app.kubernetes.io/name: {}
+            f:app.kubernetes.io/version: {}
+            f:helm.sh/chart: {}
+        f:spec:
+          f:rules: {}
+      manager: helm
+      operation: Update
+      time: "2022-09-17T10:57:14Z"
+    - apiVersion: networking.k8s.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:ingress.kubernetes.io/backends: {}
+            f:ingress.kubernetes.io/forwarding-rule: {}
+            f:ingress.kubernetes.io/target-proxy: {}
+            f:ingress.kubernetes.io/url-map: {}
+          f:finalizers:
+            .: {}
+            v:"networking.gke.io/ingress-finalizer-V2": {}
+        f:status:
+          f:loadBalancer:
+            f:ingress: {}
+      manager: glbc
+      operation: Update
+      subresource: status
+      time: "2022-09-17T10:59:14Z"
+  name: sample-deploy-hyunho9877-common
+  namespace: default
+  resourceVersion: "22205"
+  uid: ea00e088-c354-4717-85eb-b0fdcedf3b69
+spec:
+  rules:
+    - host: chart-example.local
+      http:
+        paths:
+          - backend:
+              service:
+                name: sample-deploy-hyunho9877-common
+                port:
+                  number: 80
+            path: /
+            pathType: ImplementationSpecific
+status:
+  loadBalancer:
+    ingress:
+      - ip: 34.160.133.168
