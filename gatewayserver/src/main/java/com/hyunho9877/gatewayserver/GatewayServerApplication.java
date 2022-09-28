@@ -29,17 +29,20 @@ public class GatewayServerApplication {
         return builder.routes()
                 .route(p -> p
                         .path("/eazybank/accounts/**")
-                        .filters(f -> f.rewritePath("/eazybank/accounts/(?<segment>.*)", "/${segment}")
+                        .filters(f -> f.filters(filterFactory.apply())
+                                .rewritePath("/eazybank/accounts/(?<segment>.*)", "/${segment}")
                                 .removeRequestHeader("Cookies"))
                         .uri("lb://ACCOUNTS")).
                 route(p -> p
                         .path("/eazybank/loans/**")
-                        .filters(f -> f.rewritePath("/eazybank/loans/(?<segment>.*)", "/${segment}")
+                        .filters(f -> f.filters(filterFactory.apply())
+                                .rewritePath("/eazybank/loans/(?<segment>.*)", "/${segment}")
                                 .removeRequestHeader("Cookies"))
                         .uri("lb://LOANS")).
                 route(p -> p
                         .path("/eazybank/cards/**")
-                        .filters(f -> f.rewritePath("/eazybank/cards/(?<segment>.*)", "/${segment}")
+                        .filters(f -> f.filters(filterFactory.apply())
+                                .rewritePath("/eazybank/cards/(?<segment>.*)", "/${segment}")
                                 .removeRequestHeader("Cookies"))
                         .uri("lb://CARDS")).build();
     }
